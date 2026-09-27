@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Programming Reviewer & Quiz</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #111827;
+      --panel: #1f2937;
+      --panel-2: #0b1220;
+      --primary: #7c3aed;
+      --primary-2: #a78bfa;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --text: #e5e7eb;
+      --muted: #cbd5e1;
+      --border: rgba(255,255,255,0.09);
+      --shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #020817, #0f172a 35%, #111827);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    .mother-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #ddd6fe;
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid rgba(167, 139, 250, 0.28);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      background: rgba(124, 58, 237, 0.2);
+      transform: translateY(-1px);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 3vw, 3rem);
+      letter-spacing: 0.04em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .section {
+      background: rgba(17, 24, 39, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .section h2 {
+      position: sticky;
+      top: 108px;
+      z-index: 5;
+      margin-top: 0;
+      margin-bottom: 18px;
+      font-size: clamp(1.4rem, 2vw, 2.2rem);
+      color: #f8fafc;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 10px 24px rgba(2, 8, 23, 0.2);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      position: sticky;
+      top: 108px;
+      z-index: 6;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      box-shadow: 0 10px 24px rgba(2, 8, 23, 0.2);
+    }
+
+    .section-header h2 {
+      margin: 0;
+      position: static;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .quiz-header-shell {
+      position: sticky;
+      top: 108px;
+      z-index: 7;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px 16px;
+      box-shadow: 0 10px 24px rgba(2, 8, 23, 0.2);
+      margin-bottom: 18px;
+    }
+
+    .quiz-header-shell .taglish {
+      margin: 12px 0 0;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .topic-card {
+      background: linear-gradient(180deg, rgba(124, 58, 237, 0.13), rgba(15,23,42,0.8));
+      border: 1px solid rgba(167, 139, 250, 0.25);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .topic-card h3 {
+      margin: 0 0 8px;
+      color: #ddd6fe;
+      font-size: 1.15rem;
+    }
+
+    .topic-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .topic-block {
+      margin-top: 18px;
+      padding: 18px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .topic-block h3 {
+      margin-top: 0;
+      color: #c4b5fd;
+    }
+
+    .topic-block ul,
+    .topic-block ol {
+      margin: 12px 0 0 18px;
+      color: var(--muted);
+    }
+
+    .code-box {
+      background: #020817;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: #dbeafe;
+      border-radius: 12px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 16px 0;
+      font-size: 0.95rem;
+    }
+
+    .taglish {
+      color: #e2e8f0;
+    }
+
+    .label-tag {
+      display: inline-block;
+      margin: 8px 8px 0 0;
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid rgba(167, 139, 250, 0.25);
+      color: #ddd6fe;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .quiz-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+      align-items: center;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      opacity: 0.96;
+    }
+
+    .primary-btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-2));
+      color: white;
+    }
+
+    .secondary-btn {
+      background: #1e293b;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .quiz-list {
+      margin-top: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .question-card {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .question-card h3 {
+      margin: 0 0 12px;
+      font-size: 1.08rem;
+      color: #f8fafc;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
+
+    .option-item input {
+      accent-color: var(--primary);
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .option-item.correct-answer {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.5);
+      color: #dcfce7;
+    }
+
+    .option-item.wrong-answer {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #fee2e2;
+    }
+
+    .answer-box {
+      display: none;
+      margin-top: 14px;
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #dcfce7;
+    }
+
+    .answer-box.visible {
+      display: block;
+    }
+
+    .score-panel {
+      display: none;
+      padding: 14px 16px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      min-width: 240px;
+      max-width: 400px;
+      width: auto;
+    }
+
+    .score-panel.visible {
+      display: block;
+    }
+
+    .score-panel h3 {
+      margin: 0 0 8px;
+      font-size: 1.4rem;
+    }
+
+    .score-summary {
+      font-size: 1.05rem;
+      color: var(--muted);
+    }
+
+    .score-badge {
+      display: inline-block;
+      font-weight: bold;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(124,58,237,0.16);
+      color: #ddd6fe;
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      margin-top: 10px;
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 18px 12px 60px; }
+      .mother-header {
+        padding: 8px 8px 12px;
+        border-radius: 10px;
+      }
+      .header-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      h1 {
+        font-size: 1.1rem;
+        margin: 0;
+        line-height: 1.3;
+        text-align: center;
+      }
+      .subtitle {
+        font-size: 0.72rem;
+        line-height: 1.5;
+      }
+      .nav-links {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+        width: 100%;
+      }
+      .nav-links a {
+        display: block;
+        text-align: center;
+        padding: 6px 4px;
+        font-size: 0.7rem;
+        border-radius: 10px;
+      }
+      .section {
+        padding: 12px;
+      }
+      .section h2 {
+        top: 88px;
+        font-size: 1rem;
+        padding: 10px 12px;
+      }
+      .section-header {
+        top: 92px;
+        padding: 8px 10px;
+      }
+      .section-header h2 {
+        font-size: 1rem;
+      }
+      .quiz-header-shell {
+        top: 92px;
+        padding: 10px 12px 12px;
+      }
+      .taglish {
+        font-size: 0.76rem;
+        line-height: 1.6;
+      }
+      .topic-card h3,
+      .topic-block h3,
+      .question-card h3,
+      .score-panel h3 {
+        font-size: 0.92rem;
+      }
+      .topic-card p,
+      .topic-block ul,
+      .topic-block ol,
+      .score-summary,
+      .option-item,
+      .code-box,
+      .answer-box {
+        font-size: 0.75rem;
+      }
+      .quiz-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      button {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 0.8rem;
+      }
+      .score-panel {
+        min-width: 0;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .container { padding: 14px 10px 52px; }
+      .mother-header { padding: 8px 8px 10px; }
+      h1 { font-size: 0.96rem; }
+      .nav-links a { font-size: 0.64rem; }
+      .section h2,
+      .section-header,
+      .quiz-header-shell { top: 78px; }
+      .section h2 { font-size: 0.92rem; }
+      .section-header h2 { font-size: 0.92rem; }
+      .taglish, .topic-card p, .topic-block ul, .topic-block ol, .score-summary, .option-item, .code-box, .answer-box { font-size: 0.72rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="mother-header">
+      <div class="header-top">
+        <h1>Programming Reviewer & Quiz</h1>
+        <nav class="nav-links" aria-label="Section navigation">
+          <a href="#section-1">1</a>
+          <a href="#section-2">2</a>
+          <a href="#section-3">3</a>
+          <a href="#section-4">4</a>
+        </nav>
+      </div>
+    </header>
+
+    <section id="section-1" class="section">
+      <h2>1) Summary ng Topics</h2>
+
+      <div class="summary-grid">
+        <div class="topic-card">
+          <h3>1. Variables at Data Types</h3>
+          <p>Ginagamit ang variables para mag-store ng value. Ang data type ay nagsasabi ng klase ng data na maaaring lamanin ng variable tulad ng integers, strings, booleans, at floats.</p>
+        </div>
+
+        <div class="topic-card">
+          <h3>2. Operators</h3>
+          <p>Ang arithmetic, comparison, at logical operators ay ginagamit para gumawa ng calculations at mag-evaluate ng conditions. Mahalaga ito para sa paggawa ng logic sa code.</p>
+        </div>
+
+        <div class="topic-card">
+          <h3>3. Control Structures</h3>
+          <p>Kasama dito ang if, else, switch, at loops. Tinutukoy nito kung paano magdecide at mag-ulit ang program batay sa mga kondisyon at requirements.</p>
+        </div>
+
+        <div class="topic-card">
+          <h3>4. Functions</h3>
+          <p>Ang function ay block ng code na may specific purpose. Pinapadali nito ang pag-repeat ng logic, mas organized ang program, at mas madali itong maintain.</p>
+        </div>
+
+        <div class="topic-card">
+          <h3>5. Arrays at Lists</h3>
+          <p>Ginagamit ang arrays para mag-collect ng maraming values sa iisang variable. Madalas itong ginagamit para sa data handling at processing.</p>
+        </div>
+
+        <div class="topic-card">
+          <h3>6. Input / Output</h3>
+          <p>Ang input ay kinukuha mula sa user o file, habang ang output ay ipinapakita sa screen o sinusulat sa file. Ito ang communication ng program sa user.</p>
+        </div>
+
+        <div class="topic-card">
+          <h3>7. OOP (Object-Oriented Programming)</h3>
+          <p>Ang OOP ay ginagamit para i-model ang code sa pamamagitan ng mga object na may mga attributes at methods. Pinapadali nito ang scalability at code organization.</p>
+        </div>
+
+        <div class="topic-card">
+          <h3>8. Data Structures</h3>
+          <p>Ang data structures ay tumutukoy sa paraan ng pag-organize at pag-store ng data. Kasama rito ang arrays, stacks, queues, linked lists, at trees.</p>
+        </div>
+      </div>
+
+      <div class="topic-block">
+        <h3>Detailed Explanation (Taglish)</h3>
+        <p class="taglish">In programming, each code line acts like a set of instructions given to the computer. When we write code, we are not just typing words; we are defining a sequence of commands that the system must follow. For example, if we want to compute an average, we need input values, a formula, and an output result. When the logic is structured properly, the program can solve the problem accurately. If the code structure is weak or disorganized, the output may become incorrect or difficult to interpret.</p>
+
+        <p class="taglish">A programming language has syntax, which is similar to the grammar of code. If punctuation is incorrect, a semicolon is missing, or the syntax is invalid, the program may fail to run properly. This is why proper syntax is important: it ensures that the computer correctly understands the instructions being provided.</p>
+
+        <p class="taglish">Aside from syntax, logic is equally important. Even if there are no syntax errors, a flawed algorithm can still produce the wrong result. Effective coding combines correct syntax, sound logic, and a well-organized structure. One of the most important concepts is the function, which is a reusable block of code that can be called multiple times in different parts of the program. This improves efficiency and makes the code easier to read and maintain.</p>
+      </div>
+    </section>
+
+    <section id="section-2" class="section">
+      <h2>2) Reviewer ng Enumeration at Definition</h2>
+
+      <div class="topic-block">
+        <h3>Enumeration</h3>
+        <p class="taglish">Enumeration refers to a list of related items organized in a specific order or group. In programming, it is commonly used to represent choices, categories, or possible values. Examples include the days of the week, menu options, or status values.</p>
+        <ol>
+          <li>Items that are logically related to one another</li>
+          <li>Used to organize data in a structured way</li>
+          <li>Can be listed systematically for easier reading and review</li>
+          <li>Helps improve clarity and logic in coding</li>
+        </ol>
+      </div>
+
+      <div class="topic-block">
+        <h3>Definition</h3>
+        <p class="taglish">A definition is the precise meaning or description of a term. For example, a variable is a storage location used to hold data, a function is a reusable block of code, and syntax is the set of rules that must be followed for a program to work correctly. In short, definitions provide clarity and context for each programming concept.</p>
+      </div>
+
+      <div class="topic-block">
+        <h3>Advanced Concepts</h3>
+        <p class="taglish">Beyond the basics, programming also includes OOP, which organizes code into classes and objects. This is useful when building larger systems because it promotes modularity, reusability, and maintainability. Data structures, on the other hand, determine how information is arranged and processed for efficient access and retrieval.</p>
+        <ul>
+          <li><strong>OOP</strong> - organizes code using objects, classes, inheritance, and encapsulation.</li>
+          <li><strong>Data Structures</strong> - structures such as arrays, stacks, queues, linked lists, and trees.</li>
+          <li><strong>Efficiency</strong> - choosing the correct structure improves speed and memory usage.</li>
+        </ul>
+      </div>
+
+      <div class="topic-block">
+        <h3>Mga halimbawa ng Definition sa Program</h3>
+        <ul>
+          <li><strong>Variable</strong> - storage ng data na maaaring mabago.</li>
+          <li><strong>Constant</strong> - value na hindi dapat baguhin habang tumatakbo ang program.</li>
+          <li><strong>Loop</strong> - paulit-ulit na execution ng code habang may condition.</li>
+          <li><strong>Conditional Statement</strong> - isang code na nag-uusisa kung may kondisyon bang natupad.</li>
+          <li><strong>Array</strong> - collection ng maraming data sa iisang variable.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="section-3" class="section">
+      <h2>3) Reviewer ng Syntax Code</h2>
+
+      <div class="topic-block">
+        <h3>Example 1: Variable and Condition</h3>
+        <div class="code-box">
+<pre>int age = 18;
+
+if (age >= 18) {
+    System.out.println("Adult");
+} else {
+    System.out.println("Minor");
+}</pre>
+        </div>
+        <p class="taglish"><strong>What is its purpose?</strong> This code is used to determine whether a person is considered an adult or a minor. The program displays the appropriate output based on the condition.</p>
+        <p class="taglish"><strong>Function of each part:</strong></p>
+        <ul>
+          <li><strong>int age = 18;</strong> - declares a variable with an integer value.</li>
+          <li><strong>if (age >= 18)</strong> - checks whether the condition is true.</li>
+          <li><strong>{ ... }</strong> - defines the block of code that executes when the condition is true.</li>
+          <li><strong>else</strong> - executes when the condition evaluates to false.</li>
+          <li><strong>System.out.println</strong> - prints the result to the screen.</li>
+        </ul>
+        <p class="taglish"><strong>Why is it important?</strong> Variables and conditional statements make the program dynamic and interactive. Software can make decisions based on user input or data values.</p>
+      </div>
+
+      <div class="topic-block">
+        <h3>Example 2: Function</h3>
+        <div class="code-box">
+<pre>public static int addNumbers(int a, int b) {
+    int sum = a + b;
+    return sum;
+}
+
+System.out.println(addNumbers(5, 7));</pre>
+        </div>
+        <p class="taglish"><strong>What is its purpose?</strong> This is used to encapsulate the logic of addition in a single function, reducing repeated code and improving efficiency.</p>
+        <p class="taglish"><strong>Function of each part:</strong></p>
+        <ul>
+          <li><strong>public static</strong> - defines the method access level and static behavior.</li>
+          <li><strong>int addNumbers(int a, int b)</strong> - defines the function and its two parameters.</li>
+          <li><strong>return sum;</strong> - passes the computed value back to the calling code.</li>
+          <li><strong>addNumbers(5, 7)</strong> - calls the function and provides the input values.</li>
+        </ul>
+        <p class="taglish"><strong>Why is it important?</strong> Functions improve reusability, maintainability, and organization. When a project grows larger, modular code becomes much easier to manage and debug.</p>
+      </div>
+
+      <div class="topic-block">
+        <h3>Example 3: Loop</h3>
+        <div class="code-box">
+<pre>for (int i = 1; i <= 5; i++) {
+    System.out.println("Number: " + i);
+}</pre>
+        </div>
+        <p class="taglish"><strong>What is its purpose?</strong> This repeats a statement as long as the condition remains true. It is commonly used for processing lists and handling repetitive tasks efficiently.</p>
+        <p class="taglish"><strong>Function of each part:</strong></p>
+        <ul>
+          <li><strong>for</strong> - starts a loop.</li>
+          <li><strong>int i = 1</strong> - initializes the starting value.</li>
+          <li><strong>i <= 5</strong> - defines the condition for continuing execution.</li>
+          <li><strong>i++</strong> - increments the value after each iteration.</li>
+        </ul>
+        <p class="taglish"><strong>Why is it important?</strong> Many tasks are repetitive. Instead of writing five separate lines, a single loop can automate the process and reduce complexity.</p>
+      </div>
+    </section>
+
+    <section id="section-4" class="section">
+      <div class="quiz-header-shell">
+        <div class="section-header">
+          <h2>4) Quiz / Exam (1-50)</h2>
+          <div id="scorePanel" class="score-panel">
+            <h3>Score Result</h3>
+            <div id="scoreSummary" class="score-summary"></div>
+            <div id="scoreBadge" class="score-badge"></div>
+          </div>
+        </div>
+        <div class="quiz-controls">
+          <button class="primary-btn" id="viewAnswerBtn">View Answer</button>
+          <button class="secondary-btn" id="shuffleBtn">Shuffle Again</button>
+        </div>
+      </div>
+
+      <div id="quizList" class="quiz-list"></div>
+    </section>
+  </div>
+
+  <script>
+    const questionBank = [
+      { q: 'Ano ang tawag sa container na nag-iimbak ng data sa programming?', options: ['Variable', 'Function', 'Loop', 'Array'], answer: 'Variable', explanation: 'Ang variable ay ginagamit para mag-store ng data na maaaring baguhin.' },
+      { q: 'Ano ang pangunahing layunin ng function?', options: ['Magtipa ng random na code', 'Mag-reuse ng logic at gawing organized ang code', 'Magbasa ng input', 'Mag-print ng integer lang',], answer: 'Mag-reuse ng logic at gawing organized ang code', explanation: 'Ang function ay reusable block ng code na nagpapadali sa maintenance at readability.' },
+      { q: 'Alin ang tamang pagkakaintindi ng syntax?', options: ['Batas ng grammar ng programming language', 'Pangalan ng variable', 'Output ng program', 'List ng integer values'], answer: 'Batas ng grammar ng programming language', explanation: 'Ang syntax ang set of rules na dapat sundin para maunawaan ng compiler/interpreter ang code.' },
+      { q: 'Ano ang output ng expression: 8 + 2 * 3 ?', options: ['30', '18', '14', '24'], answer: '14', explanation: 'Ayon sa order of operations, multiplication muna bago addition: 2 * 3 = 6, 8 + 6 = 14.' },
+      { q: 'Anong statement ang ginagamit para magdesisyon batay sa kondisyon?', options: ['Loop', 'Function', 'Conditional statement', 'Comment'], answer: 'Conditional statement', explanation: 'Ginagamit ang if/else para magdecide ang program batay sa condition.' },
+      { q: 'Ano ang kahulugan ng array?', options: ['Isang uri ng function', 'Collection ng maraming values sa iisang variable', 'Batas sa syntax', 'Pagbasa ng input',], answer: 'Collection ng maraming values sa iisang variable', explanation: 'Ang array ay listahan ng data na maaaring i-access ng index.' },
+      { q: 'Alin ang halimbawa ng valid variable name?', options: ['2name', 'student_name', 'class-name', 'for'], answer: 'student_name', explanation: 'Karaniwang valid ang variable names na may letters, underscore, at hindi reserved keyword.' },
+      { q: 'Ano ang role ng loop?', options: ['Magsagawa ng command once lamang', 'Mag-ulit ng code habang true ang condition', 'Mag-sanitize ng input', 'Mag-save ng data sa file'], answer: 'Mag-ulit ng code habang true ang condition', explanation: 'Nilalayon ng loop na i-repeat ang block ng code nang maraming beses.' },
+      { q: 'Paano tinatawag ang code na hindi isinasagawa ng computer?', options: ['Function', 'Comment', 'Array', 'Variable'], answer: 'Comment', explanation: 'Ang comments ay para sa human readers at hindi tinatrabaho ng interpreter/compiler.' },
+      { q: 'Alin ang halimbawa ng comparison operator?', options: ['+', '*', '==', '&&'], answer: '==', explanation: 'Ang == ay ginagamit para compare ang equality ng dalawang values.' },
+      { q: 'Ano ang kahulugan ng if-else?', options: ['Mag-print lang ng text', 'Nagbibigay ng choice sa pagitan ng dalawang possible actions', 'Hindi maaaring gamitin sa code', 'Pangalan ng variable'], answer: 'Nagbibigay ng choice sa pagitan ng dalawang possible actions', explanation: 'Ang if-else ay nagsusuri ng condition at pumipili kung aling block ang tatakbo.' },
+      { q: 'Ano ang tawag sa variable na hindi nagbabago ang value?', options: ['Dynamic variable', 'Constant', 'Array', 'Parameter'], answer: 'Constant', explanation: 'Constant ay may fixed value na hindi binabago sa buong program.' },
+      { q: 'Alin ang tamang halimbawa ng arithmetic operator?', options: ['>', '<=', '+', '&&'], answer: '+', explanation: 'Ang + ay unang halimbawa ng arithmetic operator na ginagamit para mag-add.' },
+      { q: 'Ano ang purpose ng return statement sa function?', options: ['Huminto na ang program', 'Ibalik ang value sa caller', 'Mag-save ng file', 'Mag-print sa console'], answer: 'Ibalik ang value sa caller', explanation: 'Ang return statement ay ginagamit para ibalik ang output ng function.' },
+      { q: 'Ano ang kahulugan ng parameter sa function?', options: ['Variable na ibinibigay sa function', 'Pangalan ng loop', 'Output lang', 'Comment'], answer: 'Variable na ibinibigay sa function', explanation: 'Ang parameter ay input na ipapasa sa function upang magamit ng logic nito.' },
+      { q: 'Alin ang tamang halimbawa ng boolean value?', options: ['"true"', 'true', '5', 'A'], answer: 'true', explanation: 'Ang boolean values ay true at false, at hindi ito string.' },
+      { q: 'Paano tinatawag ang proseso ng pagkuha ng input ng user?', options: ['Output', 'Input', 'Looping', 'Parsing'], answer: 'Input', explanation: 'Ang input ay proseso ng pagtanggap ng data mula sa user o external source.' },
+      { q: 'Alin ang kahulugan ng output?', options: ['Pagtanggap ng data', 'Pagpapakita ng result sa user', 'Variable declaration', 'Printing comments'], answer: 'Pagpapakita ng result sa user', explanation: 'Ang output ay ang resulta na ipinapakita sa screen, file, o device.' },
+      { q: 'Ano ang kahulugan ng algorithm?', options: ['List of instructions to solve a problem', 'Type of function', 'Syntax error', 'Machine code'], answer: 'List of instructions to solve a problem', explanation: 'Ang algorithm ay step-by-step method para makuha ang tamang sagot sa isang problem.' },
+      { q: 'Alin ang tamang panuntunan sa naming a variable?', options: ['Puwedeng magsimula sa number', 'Dapat may meaningful name at hindi reserved word', 'Dapat laging uppercase only', 'Hindi dapat may underscore'], answer: 'Dapat may meaningful name at hindi reserved word', explanation: 'Mas malinaw ang code kung ang variable ay descriptive at valid.' },
+      { q: 'Ano ang gamit ng switch statement?', options: ['Para magloop', 'Para mag-compare ng maraming possible values', 'Para ipakita ang output', 'Para magdeclare ng array'], answer: 'Para mag-compare ng maraming possible values', explanation: 'Ang switch ay kapaki-pakinabang sa maraming alternative condition.' },
+      { q: 'Ano ang resulta ng expression: 10 % 3?', options: ['1', '3', '0', '13'], answer: '1', explanation: 'Ang modulus operator ay nagbabalik ng remainder: 10 / 3 = 3 remainder 1.' },
+      { q: 'Ano ang function ng semicolon sa ilang programming languages?', options: ['Nag-signify ng comment', 'Terminates a statement', 'Creates a loop', 'Defines a variable'], answer: 'Terminates a statement', explanation: 'Maraming languages ang semicolon ay ginagamit upang tapusin ang statement.' },
+      { q: 'Alin ang halimbawa ng logical operator?', options: ['&&', '==', '+', '='], answer: '&&', explanation: 'Ang && ay logical AND operator na ginagamit sa condition combination.' },
+      { q: 'Ano ang gamit ng else if?', options: ['Mag-allow ng maraming conditional checks', 'Mag-loop ng array', 'Magsalita sa user', 'Inline comment'], answer: 'Mag-allow ng maraming conditional checks', explanation: 'Ang else if ay ginagamit upang i-check ang maraming conditions sequentially.' },
+      { q: 'Ano ang kahulugan ng debugging?', options: ['Pagsagawa ng output', 'Paghahanap at pag-aayos ng bugs o errors', 'Pagbasa ng code', 'Pag-isip ng variable'], answer: 'Paghahanap at pag-aayos ng bugs o errors', explanation: 'Ang debugging ay mahalaga para matanggal ang mga error sa program.' },
+      { q: 'Ano ang tawag sa program na tumutulong sa compiler na maunawaan ang code?', options: ['Debugger', 'Interpreter', 'Array', 'Keyword'], answer: 'Interpreter', explanation: 'Ang interpreter ay nagpaproseso at tumutulong i-run ang source code.' },
+      { q: 'Ano ang kahulugan ng compile time error?', options: ['Error na lumilitaw kapag running ang program', 'Error na lumilitaw habang tinatanggap ang code', 'Input error', 'Output error'], answer: 'Error na lumilitaw habang tinatanggap ang code', explanation: 'Ang compile-time error ay madalas dulot ng syntax errors o invalid declarations.' },
+      { q: 'Ang program ay dapat na ____ upang madali basahin at maintain.', options: ['Complicated', 'Readable', 'Hidden', 'Random'], answer: 'Readable', explanation: 'Mas mauunawaan at mapapangalagaan ang code kung readable at organized.' },
+      { q: 'Ano ang kahulugan ng concatenation?', options: ['Pagsasama ng strings', 'Pag-add ng integers', 'Pag-loop ng array', 'Pagde-delete ng variable'], answer: 'Pagsasama ng strings', explanation: 'Sa programming, ang concatenation ay pagsasama ng text values.' },
+      { q: 'Alin ang tamang output ng code: console.log("Hi" + " there") sa JavaScript?', options: ['Hi there', 'Hi there!', 'Hi there?'], answer: 'Hi there', explanation: 'Kapag pinagsama ang dalawang strings, magkakabit sila nang walang extra separator.' },
+      { q: 'Ano ang gamit ng break statement sa loop?', options: ['Parang remove variable', 'Huminto sa loop immediately', 'Magbasa ng file', 'I-save ang data'], answer: 'Huminto sa loop immediately', explanation: 'Ang break ay ginagamit para labasan agad ang loop kapag natugunan ang condition.' },
+      { q: 'Ano ang role ng continue statement?', options: ['Ito ay nagpapagpatuloy sa next iteration', 'Inihinto ang program', 'Tinutukoy ang variable', 'Nililinis ang memory'], answer: 'Ito ay nagpapagpatuloy sa next iteration', explanation: 'Ang continue ay skip ang natitirang code sa current loop iteration at magpapatuloy sa next one.' },
+      { q: 'Ano ang difference ng int at float?', options: ['Wala', 'int ay integer, float ay decimal', 'float ay text', 'int ay string'], answer: 'int ay integer, float ay decimal', explanation: 'Ang integer ay buong numero, habang ang float ay may decimal point.' },
+      { q: 'Alin ang tamang salitang nagsasaad ng conditional operation?', options: ['if', 'for', 'switch', 'array'], answer: 'if', explanation: 'Ang if ay ginagamit para maski kung may condition na tunay o hindi.' },
+      { q: 'Ano ang kahulugan ng nested loop?', options: ['Loop within a loop', 'Function within a function', 'Variable within a variable', 'Comment within a comment'], answer: 'Loop within a loop', explanation: 'Ang nested loop ay loop sa loob ng isa pang loop, kadalasan ginagamit sa matrix o multi-dimensional data.' },
+      { q: 'Ano ang tawag sa process ng paglilipat ng datos sa memory?', options: ['Assignment', 'Iteration', 'Compilation', 'Indexing'], answer: 'Assignment', explanation: 'Assigning value means inilalaan mo ang value sa variable.' },
+      { q: 'Ang expression na gumagamit ng comparison operator ay tinatawag na?', options: ['Arithmetic expression', 'Boolean expression', 'String expression', 'Array expression'], answer: 'Boolean expression', explanation: 'Karaniwang nagbabalik ang comparison ng true or false value.' },
+      { q: 'Ano ang kahulugan ng parameter passing?', options: ['Pagsend ng data sa function', 'Pag-type ng variable', 'Pag-add ng comment', 'Pagbasa ng condition'], answer: 'Pagsend ng data sa function', explanation: 'Sa parameter passing, ipinapasa ang data sa function para gamiting input.' },
+      { q: 'Paano tinatawag ang mga reserved words sa programming language?', options: ['Identifiers', 'Keywords', 'Comments', 'Variables'], answer: 'Keywords', explanation: 'Ang keywords ay mga naka-reserve na salita na may espesyal na kahulugan sa language.' },
+      { q: 'Ano ang output ng 5 > 3?', options: ['false', '5', '3', 'true'], answer: 'true', explanation: 'Ang 5 > 3 ay true dahil ang 5 ay mas malaki kaysa 3.' },
+      { q: 'Alin ang tamang halimbawa ng array declaration?', options: ['int[] numbers = {1,2,3};', 'int numbers = 1,2,3;', 'array numbers = [1,2,3];', 'numbers = 1,2,3;'], answer: 'int[] numbers = {1,2,3};', explanation: 'Ang array ay dapat ma-declare gamit ang specified type at list ng values.' },
+      { q: 'Ano ang kahulugan ng indexing?', options: ['Pagtawag sa variable gamit ang index number', 'Pag-clear ng memory', 'Pagbasa ng comment', 'Paglalagay ng loop'], answer: 'Pagtawag sa variable gamit ang index number', explanation: 'Ang index ay ginagamit para i-access ang isang item sa array.' },
+      { q: 'Alin ang description ng recursion?', options: ['Function na tumatawag sa sarili', 'Variable na may constant value', 'Loop na walang condition', 'String na walang quotes'], answer: 'Function na tumatawag sa sarili', explanation: 'Ang recursion ay kapag ang function ay tumatawag sa sarili para lutasin ang problema nang step-by-step.' },
+      { q: 'Ano ang use ng modulo operator?', options: ['Magbasa ng integer only', 'Maghanap ng remainder', 'Magsulat ng output', 'Magdeclare ng function'], answer: 'Maghanap ng remainder', explanation: 'Ang % ay ginagamit para malaman ang remainder pagkatapos ng division.' },
+      { q: 'Ano ang kahulugan ng program flow?', options: ['Sequence kung paano tumatakbo ang code', 'Variable naming style', 'Pangalan ng compiler', 'List of comments'], answer: 'Sequence kung paano tumatakbo ang code', explanation: 'Ang program flow ay ang order kung paano isinasagawa ng computer ang instructions.' },
+      { q: 'Ano ang pangunahing layunin ng pseudocode?', options: ['Maging final program na executable', 'Maglarawan ng logic bago isulat ang actual code', 'Magbasa ng input', 'Mag-save ng database'], answer: 'Maglarawan ng logic bago isulat ang actual code', explanation: 'Ang pseudocode ay mababangko at madaling maunawaan na representation ng algorithm.' },
+      { q: 'Alin ang tamang kahulugan ng declaration?', options: ['Ipinapahayag ang type at pangalan ng variable/function', 'Binabalik ang output', 'Nag-uulit ng loop', 'Hindi maaaring gamitin'], answer: 'Ipinapahayag ang type at pangalan ng variable/function', explanation: 'Ang declaration ay nagsasabi ng existence at identity ng variable o function.' },
+      { q: 'Ano ang kahulugan ng exception?', options: ['Hindi inaasahang error habang tumatakbo ang program', 'Variable na constant', 'Loop repeat', 'String literal'], answer: 'Hindi inaasahang error habang tumatakbo ang program', explanation: 'Ang exceptions ay nangyayari kapag may problem sa runtime execution.' },
+      { q: 'Ano ang purpose ng try-catch block?', options: ['Para mahuli at mapangasiwaan ang error', 'Para mag-print ng integer', 'Para magloop batay sa array', 'Para magdefine ng variable'], answer: 'Para mahuli at mapangasiwaan ang error', explanation: 'Ginagamit ang try-catch upang ma-handle ang error nang maayos.' },
+    ];
+
+    const quizList = document.getElementById('quizList');
+    const viewAnswerBtn = document.getElementById('viewAnswerBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const scorePanel = document.getElementById('scorePanel');
+    const scoreSummary = document.getElementById('scoreSummary');
+    const scoreBadge = document.getElementById('scoreBadge');
+
+    let questions = [];
+
+    function shuffleQuestions() {
+      questions = [...questionBank].sort(() => Math.random() - 0.5);
+      renderQuiz();
+      hideResults();
+    }
+
+    function renderQuiz() {
+      quizList.innerHTML = '';
+
+      questions.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+
+        const title = document.createElement('h3');
+        title.textContent = `Question ${index + 1}: ${item.q}`;
+        card.appendChild(title);
+
+        const optionsWrap = document.createElement('div');
+        optionsWrap.className = 'options';
+
+        item.options.forEach(option => {
+          const optionRow = document.createElement('label');
+          optionRow.className = 'option-item';
+          optionRow.dataset.value = option;
+
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = `q-${index}`;
+          input.value = option;
+          input.checked = !!(item.selected && item.selected === option);
+
+          input.addEventListener('change', () => {
+            item.selected = option;
+            card.dataset.selected = option;
+          });
+
+          const text = document.createElement('span');
+          text.textContent = option;
+
+          optionRow.appendChild(input);
+          optionRow.appendChild(text);
+          optionsWrap.appendChild(optionRow);
+        });
+
+        const answerBox = document.createElement('div');
+        answerBox.className = 'answer-box';
+        answerBox.innerHTML = `<strong>Correct Answer:</strong> ${item.answer}<br><em>${item.explanation}</em>`;
+        card.appendChild(optionsWrap);
+        card.appendChild(answerBox);
+        quizList.appendChild(card);
+      });
+    }
+
+    function hideResults() {
+      scorePanel.classList.remove('visible');
+      document.querySelectorAll('.answer-box').forEach(box => box.classList.remove('visible'));
+      document.querySelectorAll('.option-item').forEach(option => {
+        option.classList.remove('correct-answer', 'wrong-answer');
+      });
+    }
+
+    function calculateScore() {
+      let correct = 0;
+      let total = questions.length;
+
+      questions.forEach(item => {
+        const selected = item.selected;
+        if (selected && selected === item.answer) {
+          correct += 1;
+        }
+      });
+
+      const percentage = Math.round((correct / total) * 100);
+      scoreSummary.innerHTML = `You answered <strong>${correct}</strong> out of <strong>${total}</strong> correctly.<br>` +
+        `Percentage: <strong>${percentage}%</strong><br>` +
+        `Wrong answers: <strong>${total - correct}</strong>`;
+      scoreBadge.textContent = percentage >= 75 ? 'Excellent!' : percentage >= 50 ? 'Good Job!' : 'Keep Reviewing!';
+      scorePanel.classList.add('visible');
+    }
+
+    function revealAnswers() {
+      document.querySelectorAll('.answer-box').forEach(box => box.classList.add('visible'));
+
+      questions.forEach((item, index) => {
+        const optionRows = document.querySelectorAll(`input[name="q-${index}"]`);
+        optionRows.forEach(input => {
+          const row = input.closest('.option-item');
+          const selectedValue = item.selected;
+          const optionValue = input.value;
+
+          row.classList.remove('correct-answer', 'wrong-answer');
+
+          if (optionValue === item.answer) {
+            row.classList.add('correct-answer');
+          } else if (selectedValue === optionValue) {
+            row.classList.add('wrong-answer');
+          }
+        });
+      });
+
+      calculateScore();
+    }
+
+    viewAnswerBtn.addEventListener('click', revealAnswers);
+    shuffleBtn.addEventListener('click', shuffleQuestions);
+
+    shuffleQuestions();
+  </script>
+</body>
+</html>
